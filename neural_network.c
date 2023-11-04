@@ -110,7 +110,6 @@ double train(
     return error_rate(target_output, net.output_layer, net.nb_outputs);
 }
 
-
 // Returns a random double between 0 and 1. (inclusive)
 double random_d()
 {

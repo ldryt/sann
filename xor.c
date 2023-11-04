@@ -8,26 +8,28 @@
 
 int main(void)
 {
-    double inputs[4][NB_INPUTS] = {{ 0, 0 },{ 0, 1 },{ 1, 0 },{ 1, 1 }};
-    double expected_output[4] = { 0, 1, 1, 0 };
+    double inputs[4][NB_INPUTS] = {{0, 0}, {0, 1}, {1, 0}, {1, 1}};
+    double expected_output[4] = {0, 1, 1, 0};
     network net = init_network(NB_INPUTS, NB_HIDDEN_NEURONS, NB_OUTPUTS);
     printf("\nError rate:\n---\n");
-    for(size_t i = 0; i < EPOCHS; i++)
+    for (size_t i = 0; i < EPOCHS; i++)
     {
         double error = 0;
-        for(size_t j = 0; j < 4; j++)
-        {   
+        for (size_t j = 0; j < 4; j++)
+        {
             error = train(net, inputs[j], &expected_output[j], LEARNING_RATE);
         }
-        if (i%7500==0) printf("Epoch %5ld: %f\n", i, error);
+        if (i % 7500 == 0)
+            printf("Epoch %5ld: %f\n", i, error);
     }
 
     printf("\nResults:\n---\n");
-    for(size_t i = 0; i < 4; i++)
-    {   
-        double* prediction = feed(net, inputs[i]);
-        
-        printf("{%d,%d} --> %g", (int)inputs[i][0], (int)inputs[i][1], (double)prediction[0]);
+    for (size_t i = 0; i < 4; i++)
+    {
+        double *prediction = feed(net, inputs[i]);
+
+        printf("{%d,%d} --> %g", (int)inputs[i][0], (int)inputs[i][1],
+            (double)prediction[0]);
         printf("\n");
     }
 

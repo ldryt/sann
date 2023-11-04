@@ -1,9 +1,9 @@
 #ifndef NEURAL_NETWORK_H
 #define NEURAL_NETWORK_H
+#include <math.h>
 #include <stdarg.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <math.h>
 
 // Returns a random double between 0 and 1. (inclusive)
 double random_d();
