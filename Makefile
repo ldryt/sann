@@ -3,6 +3,7 @@ LDFLAGS = -lm
 CC = gcc
 SRC = neural_network.c
 
+all: xor
 xor:
 	$(CC) -o xor.out $(SRC) xor.c $(CFLAGS) $(LDFLAGS)
 
