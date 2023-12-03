@@ -43,7 +43,7 @@ void back_propagation(
     for (size_t i = 0; i < net.nb_hidden_neurons; i++)
     {
         // Mesure error changes
-        double res = 0.0;
+        double res = 0;
         for (size_t j = 0; j < net.nb_outputs; j++)
         {
             double x = loss_prime(net.output_layer[j], target_output[j]);
@@ -110,10 +110,10 @@ double train(
     return error_rate(target_output, net.output_layer, net.nb_outputs);
 }
 
-// Returns a random double between 0 and 1. (inclusive)
+// Returns a random double between -0.5 and 0.5
 double random_d()
 {
-    return (double)rand() / (double)RAND_MAX;
+    return rand() / (double)RAND_MAX - 0.5;
 }
 
 // Sigmoid function.
