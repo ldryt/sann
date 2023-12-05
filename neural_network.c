@@ -1,4 +1,5 @@
 #include "neural_network.h"
+#include "math_utils.h"
 
 // Create and initialize a network structure.
 // Allocates memory on the heap.
@@ -36,6 +37,33 @@ void free_network(network net)
     free(net.output_layer);
 }
 
+// Forward propagation : calculates neuron values with a given input.
+void forward_propagation(network net, double *input)
+{
+    // Calculates hidden layer neuron values
+    for (size_t i = 0; i < net.nb_hidden_neurons; i++)
+    {
+        double res = 0.0;
+        for (size_t j = 0; j < net.nb_inputs; j++)
+        {
+            res += input[j] * net.weights[i * net.nb_inputs + j];
+        }
+        net.hidden_layer[i] = sigmoid_activation(res + net.biases[0]);
+    }
+
+    // Calculates output layer neuron values
+    for (size_t i = 0; i < net.nb_outputs; i++)
+    {
+        double res = 0.0;
+        for (size_t j = 0; j < net.nb_hidden_neurons; j++)
+        {
+            res += net.hidden_layer[j]
+                   * net.ho_weights[i * net.nb_hidden_neurons + j];
+        }
+        net.output_layer[i] = sigmoid_activation(res + net.biases[1]);
+    }
+}
+
 // Back propagation : calculates error changes and adjusts each weights
 void back_propagation(
     network net, double *input, double *target_output, double learning_rate)
@@ -66,78 +94,11 @@ void back_propagation(
     }
 }
 
-// Forward propagation : calculates neuron values with a given input.
-void forward_propagation(network net, double *input)
-{
-    // Calculates hidden layer neuron values
-    for (size_t i = 0; i < net.nb_hidden_neurons; i++)
-    {
-        double res = 0.0;
-        for (size_t j = 0; j < net.nb_inputs; j++)
-        {
-            res += input[j] * net.weights[i * net.nb_inputs + j];
-        }
-        net.hidden_layer[i] = sigmoid_activation(res + net.biases[0]);
-    }
-
-    // Calculates output layer neuron values
-    for (size_t i = 0; i < net.nb_outputs; i++)
-    {
-        double res = 0.0;
-        for (size_t j = 0; j < net.nb_hidden_neurons; j++)
-        {
-            res += net.hidden_layer[j]
-                   * net.ho_weights[i * net.nb_hidden_neurons + j];
-        }
-        net.output_layer[i] = sigmoid_activation(res + net.biases[1]);
-    }
-}
-
 // Returns output of the network with a given input.
 double *feed(network net, double *input)
 {
     forward_propagation(net, input);
     return net.output_layer;
-}
-
-// Performs forward and back propagation.
-// Returns the error rate.
-double train(
-    network net, double *input, double *target_output, double learning_rate)
-{
-    forward_propagation(net, input);
-    back_propagation(net, input, target_output, learning_rate);
-    return error_rate(target_output, net.output_layer, net.nb_outputs);
-}
-
-// Returns a random double between -0.5 and 0.5
-double random_d()
-{
-    return rand() / (double)RAND_MAX - 0.5;
-}
-
-// Sigmoid function.
-double sigmoid_activation(double z)
-{
-    return 1.0 / (1.0 + expf(-z));
-}
-
-// Derivative of the sigmoid function.
-double sigmoid_prime(double z)
-{
-    return z * (1.0 - z);
-}
-
-// Loss function (mean squared error loss).
-double loss_func(double x, double y)
-{
-    return 0.5 * (double)pow(x - y, 2);
-}
-
-// Derivative of the loss function.
-double loss_prime(double x, double y)
-{
-    return x - y;
 }
 
 // Total error rate, compares target to actual output with the error function.
@@ -148,4 +109,14 @@ double error_rate(
     for (size_t i = 0; i < nb_outputs; i++)
         res += loss_func(target_output[i], output_layer[i]);
     return res;
+}
+
+// Performs forward and back propagation.
+// Returns the error rate.
+double train(
+    network net, double *input, double *target_output, double learning_rate)
+{
+    forward_propagation(net, input);
+    back_propagation(net, input, target_output, learning_rate);
+    return error_rate(target_output, net.output_layer, net.nb_outputs);
 }
