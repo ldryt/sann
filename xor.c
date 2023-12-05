@@ -1,4 +1,5 @@
 #include "neural_network.h"
+#include <stdio.h>
 
 #define EPOCHS 10000
 #define NB_INPUTS 2
