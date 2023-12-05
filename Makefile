@@ -1,14 +1,14 @@
-CFLAGS = -std=c99 -Wall -Wextra -Werror
+CFLAGS = -std=c99 -Wall -Wextra
 LDFLAGS = -lm
 CC = gcc
-SRC = neural_network.c
+SRC = neural_network.c math_utils.c
 
-all: xor
+all: xor semeion
 
 xor:
-	$(CC) -o xor.out $(SRC) xor.c $(CFLAGS) $(LDFLAGS)
-numbers:
-	$(CC) -o numbers.out $(SRC) numbers.c $(CFLAGS) $(LDFLAGS)
+	$(CC) xor.c $(SRC) $(CFLAGS) $(LDFLAGS) -o xor.out
+semeion:
+	$(CC) semeion.c semeion_utils.c $(SRC) $(CFLAGS) $(LDFLAGS) -o semeion.out
 
 clean:
-	rm -f *.out
+	rm -f *.out *.o
