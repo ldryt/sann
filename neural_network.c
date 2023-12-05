@@ -1,5 +1,5 @@
 #include "neural_network.h"
-#include "math_utils.h"
+#include "utils/math_utils.h"
 
 // Create and initialize a network structure.
 // Allocates memory on the heap.

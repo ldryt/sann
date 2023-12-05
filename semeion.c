@@ -1,5 +1,5 @@
 #include "neural_network.h"
-#include "semeion_utils.h"
+#include "utils/semeion_utils.h"
 
 #define EPOCHS          300
 #define NB_INPUTS       256 // 16x16
