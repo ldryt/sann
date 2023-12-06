@@ -6,27 +6,23 @@
 typedef struct
 {
     size_t nb_inputs;
+    size_t nb_hidden;
     size_t nb_outputs;
     size_t nb_weights;
-    size_t nb_hidden_neurons;
+    size_t nb_biases;
 
-    double *biases;
     double *weights;
-
-    // Hidden layer weights and output layer weights.
-    double *ho_weights;
+    double *biases;
 
     double *hidden_layer;
     double *output_layer;
-
-    // Always 2 : we didn't implement more than 1 hidden layer yet.
-    size_t nb_biases;
+    double *ho_weights; // Hidden to output
 } network;
 
 // Create and initialize a network structure.
 // Allocates memory on the heap.
 network init_network(
-    size_t nb_inputs, size_t nb_hidden_neurons, size_t nb_outputs);
+    size_t nb_inputs, size_t nb_hidden, size_t nb_outputs);
 
 // Frees memory on the heap allocated by init_network.
 void free_network(network net);

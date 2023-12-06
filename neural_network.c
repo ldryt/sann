@@ -3,27 +3,27 @@
 
 // Create and initialize a network structure.
 // Allocates memory on the heap.
-network init_network(
-    size_t nb_inputs, size_t nb_hidden_neurons, size_t nb_outputs)
+network init_network(size_t nb_inputs, size_t nb_hidden, size_t nb_outputs)
 {
-    network net = {.nb_inputs = nb_inputs,
-        .nb_outputs = nb_outputs,
-        .nb_weights = nb_hidden_neurons * (nb_inputs + nb_outputs),
-        .nb_hidden_neurons = nb_hidden_neurons,
-        .nb_biases = 2};
+    network net;
+    net.nb_inputs   = nb_inputs;
+    net.nb_hidden   = nb_hidden;
+    net.nb_outputs  = nb_outputs;
+    net.nb_weights  = nb_hidden * (nb_inputs + nb_outputs);
+    net.nb_biases   = 2; // Only two effective layers
 
-    net.biases = (double *)malloc(net.nb_biases * sizeof(*net.biases));
     net.weights = (double *)malloc(net.nb_weights * sizeof(*net.weights));
-    net.ho_weights = net.weights + nb_hidden_neurons * nb_inputs;
-    net.hidden_layer
-        = (double *)malloc(nb_hidden_neurons * sizeof(*net.hidden_layer));
-    net.output_layer
-        = (double *)malloc(nb_outputs * sizeof(*net.output_layer));
-
+    net.biases = (double *)malloc(net.nb_biases * sizeof(*net.biases));
+    net.ho_weights = net.weights + nb_hidden * nb_inputs;
     for (size_t i = 0; i < net.nb_weights; i++)
         net.weights[i] = random_d();
     for (size_t i = 0; i < net.nb_biases; i++)
         net.biases[i] = random_d();
+    
+    net.hidden_layer
+        = (double *)malloc(nb_hidden * sizeof(*net.hidden_layer));
+    net.output_layer
+        = (double *)malloc(nb_outputs * sizeof(*net.output_layer));
 
     return net;
 }
@@ -41,7 +41,7 @@ void free_network(network net)
 void forward_propagation(network net, double *input)
 {
     // Calculates hidden layer neuron values
-    for (size_t i = 0; i < net.nb_hidden_neurons; i++)
+    for (size_t i = 0; i < net.nb_hidden; i++)
     {
         double res = 0.0;
         for (size_t j = 0; j < net.nb_inputs; j++)
@@ -55,10 +55,10 @@ void forward_propagation(network net, double *input)
     for (size_t i = 0; i < net.nb_outputs; i++)
     {
         double res = 0.0;
-        for (size_t j = 0; j < net.nb_hidden_neurons; j++)
+        for (size_t j = 0; j < net.nb_hidden; j++)
         {
             res += net.hidden_layer[j]
-                   * net.ho_weights[i * net.nb_hidden_neurons + j];
+                   * net.ho_weights[i * net.nb_hidden + j];
         }
         net.output_layer[i] = sigmoid_activation(res + net.biases[1]);
     }
@@ -68,7 +68,7 @@ void forward_propagation(network net, double *input)
 void back_propagation(
     network net, double *input, double *target_output, double learning_rate)
 {
-    for (size_t i = 0; i < net.nb_hidden_neurons; i++)
+    for (size_t i = 0; i < net.nb_hidden; i++)
     {
         // Mesure error changes
         double res = 0;
@@ -77,10 +77,10 @@ void back_propagation(
             double x = loss_prime(net.output_layer[j], target_output[j]);
             double y = sigmoid_prime(net.output_layer[j]);
 
-            res += x * y * net.ho_weights[j * net.nb_hidden_neurons + i];
+            res += x * y * net.ho_weights[j * net.nb_hidden + i];
 
             // Adjust hidden--output weights
-            net.ho_weights[j * net.nb_hidden_neurons + i]
+            net.ho_weights[j * net.nb_hidden + i]
                 -= x * y * net.hidden_layer[i] * learning_rate;
         }
 
