@@ -46,6 +46,7 @@ int main(int argc, char *argv[])
     else
         net = load_network(argv[1]);
     
+    srand(time(NULL));
     shuffle(ds);
 
     double* input = ds.input[0];
