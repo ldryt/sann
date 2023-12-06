@@ -126,3 +126,11 @@ void parse(dataset ds, char* line, size_t row)
             ds.target[row][col - ds.nb_inputs] = value;
     }
 }
+
+// Prints an array
+void print_array(double* array, int size)
+{
+    for (int i = 0; i < size; i++)
+        printf("%f ", (double) array[i]);
+    printf("\n");
+}

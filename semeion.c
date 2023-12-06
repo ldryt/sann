@@ -8,14 +8,6 @@
 #define LEARNING_RATE   1.66
 #define LRATE_MODIFIER  0.999
 
-// Prints an array
-void print_array(double* array, int size)
-{
-    for (int i = 0; i < size; i++)
-        printf("%f ", (double) array[i]);
-    printf("\n");
-}
-
 int main()
 {
     // srand(time(0));
