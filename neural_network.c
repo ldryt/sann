@@ -120,3 +120,41 @@ double train(
     back_propagation(net, input, target_output, learning_rate);
     return error_rate(target_output, net.output_layer, net.nb_outputs);
 }
+
+// Saves weights and biases to a file
+void save_network(network net, char *path)
+{
+    FILE *file = fopen(path, "w");
+    
+    fprintf(file, "%lu/%lu/%lu\n\n", net.nb_inputs, net.nb_hidden, net.nb_outputs);
+    
+    for (size_t i = 0; i < net.nb_weights; i++)
+        fprintf(file, "%f\n", net.weights[i]);
+    for (size_t i = 0; i < net.nb_biases; i++)
+        fprintf(file, "%f\n", net.biases[i]);
+    
+    fclose(file);
+}
+
+// Load weights and biases from a file
+network load_network(char *path)
+{
+    FILE *file = fopen(path, "r");
+    size_t nb_inputs, nb_hidden, nb_outputs = 0;
+    
+    int assigned;
+    assigned = fscanf(file, "%lu/%lu/%lu\n\n", &nb_inputs, &nb_hidden, &nb_outputs);
+    if (assigned != 3 || assigned == EOF)
+        errx(EXIT_FAILURE, "load_network: bad file format");
+    
+    network net = init_network(nb_inputs, nb_hidden, nb_outputs);
+    
+    for (size_t i = 0;  i < net.nb_weights; i++)
+        fscanf(file, "%lf\n", &net.weights[i]);
+    for (size_t i = 0; i < net.nb_biases; i++)
+        fscanf(file, "%lf\n", &net.biases[i]);
+    
+    fclose(file);
+    
+    return net;
+}

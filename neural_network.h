@@ -1,6 +1,8 @@
 #ifndef NEURAL_NETWORK_H
 #define NEURAL_NETWORK_H
 #include <stdlib.h>
+#include <stdio.h>
+#include <err.h>
 
 // The network structure.
 typedef struct
@@ -45,5 +47,11 @@ double error_rate(
 // Returns the error rate.
 double train(
     network net, double *input, double *target_output, double learning_rate);
+
+// Saves weights and biases to a file.
+void save_network(network net, char *path);
+
+// Load weights and biases from a file.
+network load_network(char *path);
 
 #endif
