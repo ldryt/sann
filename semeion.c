@@ -5,8 +5,8 @@
 #define NB_INPUTS       256 // 16x16
 #define NB_HIDDEN       32
 #define NB_OUTPUTS      10
-#define LEARNING_RATE   1.66
-#define LRATE_MODIFIER  0.999
+#define LEARNING_RATE   1.33
+#define LRATE_MODIFIER  0.996
 
 int main()
 {
