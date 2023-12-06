@@ -42,4 +42,7 @@ char* get_line(FILE *file);
 // Parses inputs and targets values from a row in the dataset
 void parse(dataset ds, char* line, size_t row);
 
+// Prints an array
+void print_array(double* array, int size);
+
 # endif
