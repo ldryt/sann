@@ -8,7 +8,7 @@ dataset build_semeion(char *path)
         errx(EXIT_FAILURE, "Could not open %s\n", path);
 
     size_t nb_sets = ln_file(file);
-    dataset ds = init_dataset(nb_sets, 16*16, 10);
+    dataset ds = init_dataset(nb_sets, 16 * 16, 10);
 
     for (size_t l = 0; l < nb_sets; l++)
     {

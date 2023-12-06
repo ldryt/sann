@@ -4,12 +4,11 @@
 dataset init_dataset(size_t nb_sets, size_t nb_inputs, size_t nb_outputs)
 {
     dataset ds;
-    
+
     ds.nb_sets = nb_sets;
     ds.nb_inputs = nb_inputs;
     ds.nb_outputs = nb_outputs;
-    
-    
+
     double **input = (double **)malloc(nb_sets * sizeof(double *));
     double **target = (double **)malloc(nb_sets * sizeof(double *));
     for (size_t i = 0; i < 2; i++)

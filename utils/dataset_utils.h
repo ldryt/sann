@@ -11,10 +11,10 @@
 typedef struct
 {
     size_t nb_sets;
-    
+
     size_t nb_inputs;
     size_t nb_outputs;
-    
+
     double **input;
     double **target;
 } dataset;
