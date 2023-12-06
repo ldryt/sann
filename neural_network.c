@@ -10,7 +10,7 @@ network init_network(size_t nb_inputs, size_t nb_hidden, size_t nb_outputs)
     net.nb_hidden   = nb_hidden;
     net.nb_outputs  = nb_outputs;
     net.nb_weights  = nb_hidden * (nb_inputs + nb_outputs);
-    net.nb_biases   = 2; // Only two effective layers
+    net.nb_biases   = 2; // Yes, only two effective layers
 
     net.weights = (double *)malloc(net.nb_weights * sizeof(*net.weights));
     net.biases = (double *)malloc(net.nb_biases * sizeof(*net.biases));
