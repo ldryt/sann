@@ -20,7 +20,7 @@ typedef struct
 } dataset;
 
 // Initialize a dataset
-dataset init_dataset(size_t nb_lines, size_t nb_inputs, size_t nb_outputs);
+dataset init_dataset(size_t nb_sets, size_t nb_inputs, size_t nb_outputs);
 
 // Frees a dataset from the heap allocated by init_dataset
 void free_dataset(dataset ds);
