@@ -54,6 +54,31 @@ void shuffle(dataset ds)
     }
 }
 
+// Test network with a random set in a dataset
+void test_random_set(dataset ds, network net)
+{
+    srand(time(NULL));
+    shuffle(ds);
+
+    double *input = ds.input[0];
+    double *target = ds.target[0];
+    double *prediction = feed(net, input);
+    char prediction_c = get_digit(prediction, ds.nb_outputs);
+    char target_c = get_digit(target, ds.nb_outputs);
+
+    printf("Input:\n");
+    for (size_t i = 0; i < ds.nb_inputs; i++)
+        printf("%s%s", input[i] > 0 ? "▆" : "-",
+            (i + 1) % (size_t)sqrt(ds.nb_inputs) == 0 ? "\n" : " ");
+    printf("Target: ");
+    printf("expecting %d\n", target_c);
+    print_array(target, ds.nb_outputs);
+    printf("Prediction: ");
+    printf("predicted a %d! %s\n", prediction_c,
+        target_c == prediction_c ? "Youpi :)" : "Too Bad :(");
+    print_array(prediction, ds.nb_outputs);
+}
+
 // Prints an array
 void print_array(double *array, size_t size)
 {

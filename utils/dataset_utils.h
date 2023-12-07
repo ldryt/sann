@@ -6,6 +6,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
+#include "../neural_network.h"
 
 // Dataset type structure
 typedef struct
@@ -27,6 +28,9 @@ void free_dataset(dataset ds);
 
 // Shuffles a dataset
 void shuffle(dataset ds);
+
+// Test network with a random set in a dataset
+void test_random_set(dataset ds, network net);
 
 // Prints an array
 void print_array(double *array, size_t size);

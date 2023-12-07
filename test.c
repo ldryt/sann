@@ -2,11 +2,11 @@
 #include "utils/mnist_utils.h"
 #include "utils/semeion_utils.h"
 
-#define EPOCHS 30
-#define HIDDEN_NEURONS 32
-#define LEARNING_RATE 1.33
-#define LRATE_MODIFIER 0.996
-#define BATCH_SIZE 1000
+#define EPOCHS 10000
+#define HIDDEN_NEURONS 42
+#define LEARNING_RATE 0.01
+#define LRATE_MODIFIER 0.999
+#define BATCH_SIZE 1024
 
 #define DS_MNIST_TRAIN_IMAGES "./datasets/mnist/train-images.idx3-ubyte"
 #define DS_MNIST_TRAIN_LABELS "./datasets/mnist/train-labels.idx1-ubyte"
@@ -87,29 +87,12 @@ int main(int argc, char *argv[])
     if (argc == 3)
         net = load_network(argv[2]);
     else
+    {
         net = train_on_ds(ds);
+        save_network(net, "./saved.net");
+    }
 
-    srand(time(NULL));
-    shuffle(ds);
-
-    double *input = ds.input[0];
-    double *target = ds.target[0];
-    double *prediction = feed(net, input);
-    char prediction_c = get_digit(prediction, ds.nb_outputs);
-    char target_c = get_digit(target, ds.nb_outputs);
-
-    printf("Input:\n");
-    for (size_t i = 0; i < net.nb_inputs; i++)
-        printf("%s%s", input[i] > 0 ? "▆" : "-",
-            (i + 1) % (size_t)sqrt(net.nb_inputs) == 0 ? "\n" : " ");
-    printf("Target: ");
-    printf("expecting %d\n", target_c);
-    print_array(target, net.nb_outputs);
-    printf("Prediction: ");
-    printf("it's a %d ! %s\n", target_c, target_c == prediction_c ? "Youpi :)" : "Too Bad :(");
-    print_array(prediction, net.nb_outputs);
-
-    save_network(net, "./saved.net");
+    test_random_set(ds, net);
 
     free_dataset(ds);
     free_network(net);

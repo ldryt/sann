@@ -5,11 +5,11 @@
 network init_network(size_t nb_inputs, size_t nb_hidden, size_t nb_outputs)
 {
     network net;
-    net.nb_inputs   = nb_inputs;
-    net.nb_hidden   = nb_hidden;
-    net.nb_outputs  = nb_outputs;
-    net.nb_weights  = nb_hidden * (nb_inputs + nb_outputs);
-    net.nb_biases   = 2; // Yes, only two effective layers
+    net.nb_inputs = nb_inputs;
+    net.nb_hidden = nb_hidden;
+    net.nb_outputs = nb_outputs;
+    net.nb_weights = nb_hidden * (nb_inputs + nb_outputs);
+    net.nb_biases = 2; // Yes, only two effective layers
 
     net.weights = (double *)malloc(net.nb_weights * sizeof(*net.weights));
     net.biases = (double *)malloc(net.nb_biases * sizeof(*net.biases));
@@ -18,9 +18,8 @@ network init_network(size_t nb_inputs, size_t nb_hidden, size_t nb_outputs)
         net.weights[i] = random_d();
     for (size_t i = 0; i < net.nb_biases; i++)
         net.biases[i] = random_d();
-    
-    net.hidden_layer
-        = (double *)malloc(nb_hidden * sizeof(*net.hidden_layer));
+
+    net.hidden_layer = (double *)malloc(nb_hidden * sizeof(*net.hidden_layer));
     net.output_layer
         = (double *)malloc(nb_outputs * sizeof(*net.output_layer));
 
@@ -56,8 +55,7 @@ void forward_propagation(network net, double *input)
         double res = 0.0;
         for (size_t j = 0; j < net.nb_hidden; j++)
         {
-            res += net.hidden_layer[j]
-                   * net.ho_weights[i * net.nb_hidden + j];
+            res += net.hidden_layer[j] * net.ho_weights[i * net.nb_hidden + j];
         }
         net.output_layer[i] = sigmoid_activation(res + net.biases[1]);
     }
@@ -124,14 +122,15 @@ double train(
 void save_network(network net, char *path)
 {
     FILE *file = fopen(path, "w");
-    
-    fprintf(file, "%lu/%lu/%lu\n\n", net.nb_inputs, net.nb_hidden, net.nb_outputs);
-    
+
+    fprintf(
+        file, "%lu/%lu/%lu\n\n", net.nb_inputs, net.nb_hidden, net.nb_outputs);
+
     for (size_t i = 0; i < net.nb_weights; i++)
         fprintf(file, "%f\n", net.weights[i]);
     for (size_t i = 0; i < net.nb_biases; i++)
         fprintf(file, "%f\n", net.biases[i]);
-    
+
     fclose(file);
 }
 
@@ -140,20 +139,21 @@ network load_network(char *path)
 {
     FILE *file = fopen(path, "r");
     size_t nb_inputs, nb_hidden, nb_outputs = 0;
-    
+
     int assigned;
-    assigned = fscanf(file, "%lu/%lu/%lu\n\n", &nb_inputs, &nb_hidden, &nb_outputs);
+    assigned
+        = fscanf(file, "%lu/%lu/%lu\n\n", &nb_inputs, &nb_hidden, &nb_outputs);
     if (assigned != 3 || assigned == EOF)
         errx(EXIT_FAILURE, "load_network: bad file format");
-    
+
     network net = init_network(nb_inputs, nb_hidden, nb_outputs);
-    
-    for (size_t i = 0;  i < net.nb_weights; i++)
+
+    for (size_t i = 0; i < net.nb_weights; i++)
         fscanf(file, "%lf\n", &net.weights[i]);
     for (size_t i = 0; i < net.nb_biases; i++)
         fscanf(file, "%lf\n", &net.biases[i]);
-    
+
     fclose(file);
-    
+
     return net;
 }
