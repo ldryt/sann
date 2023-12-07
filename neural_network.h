@@ -1,8 +1,9 @@
 #ifndef NEURAL_NETWORK_H
 #define NEURAL_NETWORK_H
-#include <stdlib.h>
-#include <stdio.h>
 #include <err.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include "utils/math_utils.h"
 
 // The network structure.
 typedef struct
@@ -23,8 +24,7 @@ typedef struct
 
 // Create and initialize a network structure.
 // Allocates memory on the heap.
-network init_network(
-    size_t nb_inputs, size_t nb_hidden, size_t nb_outputs);
+network init_network(size_t nb_inputs, size_t nb_hidden, size_t nb_outputs);
 
 // Frees memory on the heap allocated by init_network.
 void free_network(network net);

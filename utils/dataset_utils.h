@@ -29,6 +29,9 @@ void free_dataset(dataset ds);
 void shuffle(dataset ds);
 
 // Prints an array
-void print_array(double *array, int size);
+void print_array(double *array, size_t size);
+
+// Converts an array to a digit
+char get_digit(double *array, size_t size);
 
 #endif

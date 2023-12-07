@@ -55,9 +55,21 @@ void shuffle(dataset ds)
 }
 
 // Prints an array
-void print_array(double *array, int size)
+void print_array(double *array, size_t size)
 {
-    for (int i = 0; i < size; i++)
+    for (size_t i = 0; i < size; i++)
         printf("%f ", (double)array[i]);
     printf("\n");
+}
+
+// Converts an array to a digit
+char get_digit(double *array, size_t size)
+{
+    size_t res = 0;
+    for (size_t i = 1; i < size; i++)
+    {
+        if (array[i] > array[res])
+            res = i;
+    }
+    return res;
 }
