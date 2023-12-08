@@ -32,10 +32,16 @@ void shuffle(dataset ds);
 // Test network with a random set in a dataset
 void test_random_set(dataset ds, network net);
 
+// Test network accuracy with all the sets in a dataset
+void test_accuracy(dataset ds, network net);
+
 // Prints an array
 void print_array(double *array, size_t size);
 
-// Converts an array to a digit
+// Converts an array into a digit
 char get_digit(double *array, size_t size);
+
+// Get the prediction percentage of an output array
+double get_confidence(double *array, size_t size);
 
 #endif

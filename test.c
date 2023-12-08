@@ -2,7 +2,7 @@
 #include "utils/mnist_utils.h"
 #include "utils/semeion_utils.h"
 
-#define EPOCHS 10000
+#define EPOCHS 1
 #define HIDDEN_NEURONS 42
 #define LEARNING_RATE 0.01
 #define LRATE_MODIFIER 0.999
@@ -93,6 +93,8 @@ int main(int argc, char *argv[])
     }
 
     test_random_set(ds, net);
+    printf("\n");
+    test_accuracy(ds, net);
 
     free_dataset(ds);
     free_network(net);
