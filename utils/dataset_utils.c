@@ -9,18 +9,13 @@ dataset init_dataset(size_t nb_sets, size_t nb_inputs, size_t nb_outputs)
     ds.nb_inputs = nb_inputs;
     ds.nb_outputs = nb_outputs;
 
-    double **input = (double **)malloc(nb_sets * sizeof(double *));
-    double **target = (double **)malloc(nb_sets * sizeof(double *));
-    for (size_t i = 0; i < 2; i++)
+    ds.input = (double **)malloc(nb_sets * sizeof(double *));
+    ds.target = (double **)malloc(nb_sets * sizeof(double *));
+    for (size_t j = 0; j < nb_sets; j++)
     {
-        for (size_t j = 0; j < nb_sets; j++)
-        {
-            input[j] = (double *)malloc(nb_inputs * sizeof(double));
-            target[j] = (double *)malloc(nb_outputs * sizeof(double));
-        }
+        ds.input[j] = (double *)malloc(nb_inputs * sizeof(double));
+        ds.target[j] = (double *)malloc(nb_outputs * sizeof(double));
     }
-    ds.input = input;
-    ds.target = target;
 
     return ds;
 }
@@ -40,29 +35,36 @@ void free_dataset(dataset ds)
 // Shuffles a dataset
 void shuffle(dataset ds)
 {
+    double *tmp;
+    size_t random_set;
+
     for (size_t set = 0; set < ds.nb_sets; set++)
     {
-        size_t random_set = rand() % ds.nb_sets;
+        random_set = rand() % ds.nb_sets;
 
-        double *input_tmp = ds.input[set];
+        tmp = ds.input[set];
         ds.input[set] = ds.input[random_set];
-        ds.input[random_set] = input_tmp;
+        ds.input[random_set] = tmp;
 
-        double *target_tmp = ds.target[set];
+        tmp = ds.target[set];
         ds.target[set] = ds.target[random_set];
-        ds.target[random_set] = target_tmp;
+        ds.target[random_set] = tmp;
     }
 }
 
 // Test network with a random set in a dataset
 void test_random_set(dataset ds, network net)
 {
+    double *prediction;
+    char prediction_c;
+    char target_c;
+
     srand(time(NULL));
     shuffle(ds);
 
-    double *prediction = feed(net, ds.input[0]);
-    char prediction_c = get_digit(prediction, ds.nb_outputs);
-    char target_c = get_digit(ds.target[0], ds.nb_outputs);
+    prediction = feed(net, ds.input[0]);
+    prediction_c = get_digit(prediction, ds.nb_outputs);
+    target_c = get_digit(ds.target[0], ds.nb_outputs);
 
     printf("Input:\n");
     for (size_t i = 0; i < ds.nb_inputs; i++)
@@ -80,11 +82,14 @@ void test_random_set(dataset ds, network net)
 // Test network accuracy with all the sets in a dataset
 void test_accuracy(dataset ds, network net)
 {
-    double accuracy = 0;
-    double avg_confidence = 0;
+    double accuracy;
+    double avg_confidence;
     double *prediction;
     char prediction_c;
     char target_c;
+
+    accuracy = 0;
+    avg_confidence = 0;
     for (size_t set = 0; set < ds.nb_sets; set++)
     {
         prediction = feed(net, ds.input[set]);

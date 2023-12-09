@@ -36,40 +36,50 @@ uint32_t swap_endianness(uint32_t n)
 // Build a mnist dataset
 dataset build_mnist(char *images_path, char *labels_path)
 {
+    FILE *fp_images;
+    FILE *fp_labels = fopen(labels_path, "r");
     uint32_t img_buffer[4];
     uint32_t lbl_buffer[2];
+    size_t nb_sets;
+    size_t nb_inputs;
 
-    FILE *fp_images = fopen(images_path, "r");
-    FILE *fp_labels = fopen(labels_path, "r");
+    fp_images = fopen(images_path, "r");
+    if (!fp_images)
+        errx(EXIT_FAILURE,
+            "parse_mnist: error while opening images dataset %s", images_path);
 
-    if (fp_images == NULL || fp_labels == NULL)
-        errx(EXIT_FAILURE, "parse_mnist: error while opening file");
+    fp_labels = fopen(labels_path, "r");
+    if (!fp_labels)
+        errx(EXIT_FAILURE,
+            "parse_mnist: error while opening labels dataset %s", labels_path);
 
     // I could use a buffer of 4 bytes and directly swap each byte, but I
     // wanted to implement the idea behind this nice article:
     // https://developer.ibm.com/articles/au-endianc/
     fread(img_buffer, sizeof(uint32_t), 4, fp_images);
     if (swap_endianness(img_buffer[0]) != 2051)
-        errx(EXIT_FAILURE, "bad magic number for images dataset (got 0x%08x)",
+        errx(EXIT_FAILURE,
+            "parse_mnist: bad magic number for images dataset (got 0x%08x)",
             swap_endianness(img_buffer[0]));
 
     fread(lbl_buffer, sizeof(uint32_t), 2, fp_labels);
     if (swap_endianness(lbl_buffer[0]) != 2049)
-        errx(EXIT_FAILURE, "bad magic number for labels dataset (got 0x%08x)",
+        errx(EXIT_FAILURE,
+            "parse_mnist: bad magic number for labels dataset (got 0x%08x)",
             swap_endianness(lbl_buffer[0]));
 
     if (img_buffer[1] != lbl_buffer[1])
         errx(EXIT_FAILURE,
-            "inconsistencies between labels and images datasets");
+            "parse_mnist: inconsistencies between labels and images datasets");
 
-    size_t nb_sets = swap_endianness(lbl_buffer[1]);
-    size_t nb_inputs
+    nb_sets = swap_endianness(lbl_buffer[1]);
+    nb_inputs
         = swap_endianness(img_buffer[2]) * swap_endianness(img_buffer[3]);
     dataset ds = init_dataset(nb_sets, nb_inputs, 10);
 
     for (size_t set = 0; set < nb_sets; set++)
         parse_mnist_data(ds, images_path, labels_path, set);
-    
+
     fclose(fp_images);
     fclose(fp_labels);
 
