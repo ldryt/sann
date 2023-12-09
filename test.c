@@ -3,14 +3,14 @@
 #include "utils/semeion_utils.h"
 #include "utils/logum_utils.h"
 
-#define EPOCHS 20
+#define EPOCHS 300
 #define HIDDEN_NEURONS 42
-#define LEARNING_RATE 0.01
+#define LEARNING_RATE 0.1
 #define LRATE_MODIFIER 0.999
 #define BATCH_SIZE 1024
 
-#define DS_MNIST_TRAIN_IMAGES "./datasets/mnist/train-images.idx3-ubyte"
-#define DS_MNIST_TRAIN_LABELS "./datasets/mnist/train-labels.idx1-ubyte"
+#define DS_MNIST_TRAIN_IMAGES "./datasets/mnist/t10k-images.idx3-ubyte"
+#define DS_MNIST_TRAIN_LABELS "./datasets/mnist/t10k-labels.idx1-ubyte"
 #define DS_SEMEION_FILE "./datasets/semeion/semeion.data"
 #define DS_LOGUM_FOLDER "./datasets/logum/training"
 
