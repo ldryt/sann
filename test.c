@@ -73,9 +73,9 @@ network train_on_ds(dataset ds)
 
 int main(int argc, char *argv[])
 {
-    if (argc < 2 || argc > 3)
+    if (argc < 2 || argc > 4)
         errx(EXIT_FAILURE,
-            "Usage: ./test {xor,logum,semeion,mnist} [path_to_saved_network]");
+            "Usage: ./test {xor,logum,semeion,mnist} [path_to_saved_network] [test_accuracy]");
 
     network net;
     dataset ds;
@@ -88,7 +88,7 @@ int main(int argc, char *argv[])
     else
         return train_on_xor();
 
-    if (argc == 3)
+    if (argc >= 3)
         net = load_network(argv[2]);
     else
     {
@@ -96,9 +96,10 @@ int main(int argc, char *argv[])
         save_network(net, "./saved.net");
     }
 
-    test_random_set(ds, net);
-    printf("\n");
-    test_accuracy(ds, net);
+    if (argc == 4)
+        test_accuracy(ds, net);
+    else
+        test_random_set(ds, net);
 
     free_dataset(ds);
     free_network(net);
