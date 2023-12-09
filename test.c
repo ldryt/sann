@@ -5,8 +5,8 @@
 
 #define EPOCHS 300
 #define HIDDEN_NEURONS 42
-#define LEARNING_RATE 0.1
-#define LRATE_MODIFIER 0.999
+#define LEARNING_RATE 0.01
+#define LRATE_MODIFIER 0.99
 #define BATCH_SIZE 1024
 
 #define DS_MNIST_TRAIN_IMAGES "./datasets/mnist/t10k-images.idx3-ubyte"
@@ -61,7 +61,7 @@ network train_on_ds(dataset ds)
             double *target = ds.target[set];
             error += train(net, input, target, lrate);
         }
-        printf("epoch %04ld: error rate = %.5f (learning rate = %.2f)\n", i,
+        printf("epoch %04ld: error rate = %.5f (learning rate = %.3f)\n", i,
             error / BATCH_SIZE, lrate);
 
         lrate *= LRATE_MODIFIER;
