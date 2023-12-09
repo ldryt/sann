@@ -1,8 +1,9 @@
 #include "neural_network.h"
 #include "utils/mnist_utils.h"
 #include "utils/semeion_utils.h"
+#include "utils/logum_utils.h"
 
-#define EPOCHS 1
+#define EPOCHS 20
 #define HIDDEN_NEURONS 42
 #define LEARNING_RATE 0.01
 #define LRATE_MODIFIER 0.999
@@ -11,6 +12,7 @@
 #define DS_MNIST_TRAIN_IMAGES "./datasets/mnist/train-images.idx3-ubyte"
 #define DS_MNIST_TRAIN_LABELS "./datasets/mnist/train-labels.idx1-ubyte"
 #define DS_SEMEION_FILE "./datasets/semeion/semeion.data"
+#define DS_LOGUM_FOLDER "./datasets/logum/training"
 
 int train_on_xor()
 {
@@ -53,7 +55,7 @@ network train_on_ds(dataset ds)
         shuffle(ds);
 
         double error = 0;
-        for (size_t set = 0; set < BATCH_SIZE; set++)
+        for (size_t set = 0; set < BATCH_SIZE % ds.nb_sets; set++)
         {
             double *input = ds.input[set];
             double *target = ds.target[set];
@@ -73,7 +75,7 @@ int main(int argc, char *argv[])
 {
     if (argc < 2 || argc > 3)
         errx(EXIT_FAILURE,
-            "Usage: ./test {xor,semeion,mnist} [path_to_saved_network]");
+            "Usage: ./test {xor,logum,semeion,mnist} [path_to_saved_network]");
 
     network net;
     dataset ds;
@@ -81,6 +83,8 @@ int main(int argc, char *argv[])
         ds = build_semeion(DS_SEMEION_FILE);
     else if (strcmp(argv[1], "mnist") == 0)
         ds = build_mnist(DS_MNIST_TRAIN_IMAGES, DS_MNIST_TRAIN_LABELS);
+    else if (strcmp(argv[1], "logum") == 0)
+        ds = build_logum(DS_LOGUM_FOLDER);
     else
         return train_on_xor();
 
